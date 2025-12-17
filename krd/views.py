@@ -67,7 +67,7 @@ def save_data(request):
                 "passport_expiry_date": timify(data["passport_expiry_date"]),
                 "passport_got_region": data["passport_got_region"],
                 "current_address": data["current_address"],
-                "birth_date": data["birth_date"],
+                "birth_date": timify(data["birth_date"]),
                 "gov_address": data["gov_address"],
                 "location": data["location"],
                 "description": data["description"],
@@ -98,3 +98,37 @@ def add_client(request):
             loan.client = None
             return JsonResponse({"status":False, "msg":"Mijoz topilmadi"})
         
+@login_required
+def reject(request):
+    if request.method == "POST":
+        id = request.POST.get("id")
+        loan = Loan.objects.get(id=id)
+        if loan.status == "rejected":
+            return JsonResponse({"status":False,"msg":"Bu shartnoma rad etilgan"})
+        else:
+            loan.status = "rejected"
+            loan.save()
+            return JsonResponse({"status":True,"msg":"Rad etildi"})
+
+
+@login_required
+def save_number(request):
+    if request.method == 'POST':
+        number = request.POST.get('number')
+        loan_id = request.POST.get('loan')
+        name = request.POST.get('desc')
+        loan = Loan.objects.get(id=loan_id)
+        client_obj = Client.objects.get(id=loan.client.id)
+        if (number and loan_id):
+            num = PhoneNumber(
+                number = number,
+                name = name,
+                client = client_obj
+            )
+            num.save()
+            numbers = PhoneNumber.objects.filter(client_id=client_obj.id).order_by("id")
+            nums = {}
+            for i in numbers:
+                nums[i.name] = i.number
+            return JsonResponse({"status":True,"numbers":nums})
+        return JsonResponse({"status":False})

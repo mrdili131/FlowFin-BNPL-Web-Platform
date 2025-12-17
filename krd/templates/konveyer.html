@@ -73,7 +73,7 @@
         <input id="monthly_payment" readonly>
     </div>
     <div class="field">
-        <button class="primary" onclick="calculateMonthlyPayment()">Grafikni tuzish</button>
+        <button class="primary" id="make_graphic" onclick="calculateMonthlyPayment()">Grafikni tuzish</button>
     </div>
 </div>
 </section>
@@ -189,17 +189,19 @@
             <input id="new_number_comment" placeholder="O‘zi, Oila...">
         </div>
         <div class="field" style="align-self:end;">
-            <button class="primary" onclick="addNumber()">Qo‘shish</button>
+            <button class="primary" onclick="save_number()">Qo‘shish</button>
         </div>
     </div>
 
     <!-- LIST OF PHONE NUMBERS -->
-    <div id="number_list" style="margin-top:10px; display:flex;flex-direction:column; gap:10px;">
+    <div id="number_list" class="number_list" style="margin-top:10px; display:flex;flex-direction:column; gap:10px;">
+        {% for i in loan.client.numbers.all %}
         <div class="doc">
-            <span>📞 +998 90 123 45 67</span>
-            <span>O‘zi</span>
+            <span>📞 {{i.number}}</span>
+            <span>{{i.name}}</span>
             <button class="danger" onclick="deleteItem(this)">O‘chirish</button>
         </div>
+        {% endfor %}
     </div>
 
 </div>
@@ -220,9 +222,9 @@
 <section class="tab">
 <h2>Hujjatlar</h2>
 <div class="card">
-    <div class="doc">Shartnoma <button class="primary">PDF</button></div>
-    <div class="doc">Rozilik xati <button class="primary">PDF</button></div>
-    <div class="doc">Axborot varaqasi <button class="primary">PDF</button></div>
+    <div class="doc">Shartnoma <button id="to_pdf" class="primary">PDF</button></div>
+    <div class="doc">Rozilik xati <button id="to_pdf" class="primary">PDF</button></div>
+    <div class="doc">Axborot varaqasi <button id="to_pdf" class="primary">PDF</button></div>
 </div>
 </section>
 
@@ -242,12 +244,22 @@
 <!-- ================= FOOTER ================= -->
 <footer class="footer-nav">
     <button class="ghost" onclick="prevTab()">Orqaga</button>
-    <button class="danger" onclick="spawnAlert('Jarayon bekor qilindi','error')">Bekor qilish</button>
+    <button class="danger" onclick="reject()">Bekor qilish</button>
     <button class="primary" onclick="nextTab()">Keyingi</button>
 </footer>
 
 <!-- ================= JS ================= -->
 <script>
+
+    if ("{{loan.status}}" === "rejected" || "{{loan.status}}" === "done"){
+        document.querySelectorAll('.tab').forEach(f=>{
+            f.querySelectorAll('input,select,button').forEach(i=>{
+                if(i.id !== "make_graphic" && i.id !== "to_pdf")
+            i.disabled = true;
+            i.readOnly = true;
+            })
+        })
+    }
 
 function send_data(){
     let inputs = document.querySelectorAll("input, select")
@@ -277,6 +289,7 @@ function save_product(){
     window.location.reload()
 }
 
+
 function add_client(){
     let pinfl = document.getElementById("client_pinfl").value
     console.log("searching for client")
@@ -295,6 +308,66 @@ function add_client(){
                 spawnAlert('Mijoz topildi','success')
             } else {
                 spawnAlert('Mijoz topilmadi','error')
+            }
+        }
+    });
+}
+
+function save_number(){
+    let number = document.getElementById("new_number").value
+    let desc = document.getElementById("new_number_comment").value
+    if (number && desc)
+    {
+        $.ajax({
+            url: "{% url 'save_number' %}",
+            method: "POST",
+            headers: {
+                "X-CSRFToken": document.getElementById("csrf_token").value
+            },
+            data: {
+                loan: "{{loan.id}}",
+                number: number,
+                desc: desc
+            },
+            success: function( result ) {
+                if (result.status === true){
+                    console.log(result.number)
+                    spawnAlert("Raqam saqlandi",'success')
+                    numbers_list = document.querySelector(".number_list")
+                    numbers_list.innerHTML = ''
+                    Object.entries(result.numbers).forEach(([name,number])=>{
+                        numbers_list.innerHTML += `
+                        <div class="doc">
+                            <span>📞 ${number}</span>
+                            <span>${name}</span>
+                            <button class="danger" onclick="deleteItem(this)">O‘chirish</button>
+                        </div>
+                        `
+                    })
+                } else {
+                    spawnAlert('Raqam saqlashda xatolik','error')
+                }
+            }
+        });
+    }
+    
+}
+
+function reject(){
+    $.ajax({
+        url: "{% url 'reject' %}",
+        method: "POST",
+        headers: {
+            "X-CSRFToken": document.getElementById("csrf_token").value
+        },
+        data: {
+            id: "{{loan.id}}"
+        },
+        success: function( result ) {
+            if (result.status === true){
+                spawnAlert(result.msg,'success')
+            } else {
+                spawnAlert(result.msg,'error')
             }
         }
     });

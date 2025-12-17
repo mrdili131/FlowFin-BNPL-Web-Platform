@@ -6,5 +6,7 @@ urlpatterns = [
     path('konveyer/<int:id>/',views.KonveyerView.as_view(),name='konveyer'),
     path('create_loan/',views.create_request,name='create_loan'),
     path('save_data/',views.save_data,name='save_data'),
-    path('add_client/',views.add_client,name='add_client')
+    path('add_client/',views.add_client,name='add_client'),
+    path('reject/',views.reject,name='reject'),
+    path('save_number/',views.save_number,name='save_number')
 ]

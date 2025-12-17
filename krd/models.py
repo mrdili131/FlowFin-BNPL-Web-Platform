@@ -25,7 +25,7 @@ class Client(models.Model):
 
     # Passport data
     passport_serial = models.CharField(max_length=9,null=True,blank=True)
-    passport_pinfl = models.CharField(max_length=50,unique=True,null=True,blank=True)
+    passport_pinfl = models.CharField(max_length=14,validators=[MinValueValidator(14)],unique=True,null=True,blank=True)
     passport_got_date = models.DateField(null=True,blank=True)
     passport_expiry_date = models.DateField(null=True,blank=True)
     passport_got_region = models.CharField(max_length=100,null=True,blank=True)
@@ -91,7 +91,7 @@ class Loan(models.Model):
 class PhoneNumber(models.Model):
     number = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
-    client = models.ForeignKey(Client,on_delete=models.SET_NULL,null=True,blank=True)
+    client = models.ForeignKey(Client,on_delete=models.SET_NULL,null=True,blank=True,related_name="numbers")
 
     def __str__(self):
         return f'{self.name} {self.number}'
