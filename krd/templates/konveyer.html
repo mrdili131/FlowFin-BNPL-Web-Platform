@@ -117,8 +117,8 @@
 
 <h2>Manzil</h2>
 <div class="card grid-3">
-    <div class="field"><label>Joriy yashash joyi</label><input id="current_address" value="{{loan.client.current_address}}"></div>
     <div class="field"><label>Davlat bazasidan yashash joyi</label><input id="gov_address" value="{{loan.client.gov_address}}"></div>
+    <div class="field"><label>Joriy yashash joyi</label><input id="current_address" value="{{loan.client.current_address}}"></div>
 </div>
 <div class="card grid-3">
     <div class="field"><label>Mo‘ljal</label><input id="location" value="{{loan.client.location}}"></div>
@@ -233,7 +233,7 @@
 <h2>Yakunlash</h2>
 <div class="card end">
     <p>Shartnomani yakunlash uchun tasdiqlang</p>
-    <button class="primary large" onclick="spawnAlert('Kredit muvaffaqiyatli yakunlandi','success')">
+    <button class="primary large" onclick="approve()">
         Yakunlash
     </button>
 </div>
@@ -244,6 +244,7 @@
 <!-- ================= FOOTER ================= -->
 <footer class="footer-nav">
     <button class="ghost" onclick="prevTab()">Orqaga</button>
+    <a href="/requests" class="ghost" style="text-decoration: none;color:black;font-size: 13px;" onclick="reject()">Arizalar tarixi</a>
     <button class="danger" onclick="reject()">Bekor qilish</button>
     <button class="primary" onclick="nextTab()">Keyingi</button>
 </footer>
@@ -344,6 +345,8 @@ function save_number(){
                         </div>
                         `
                     })
+                    document.getElementById("new_number").value = "";
+                    document.getElementById("new_number_comment").value = "";
                 } else {
                     spawnAlert('Raqam saqlashda xatolik','error')
                 }
@@ -372,6 +375,26 @@ function reject(){
         }
     });
 }
+
+function approve(){
+        $.ajax({
+            url: "{% url 'approve' %}",
+            method: "POST",
+            headers: {
+                "X-CSRFToken": document.getElementById("csrf_token").value
+            },
+            data: {
+                loan_id: "{{loan.id}}"
+            },
+            success: function( result ) {
+                if (result.status === true){
+                    spawnAlert(result.msg,'success')
+                } else {
+                    spawnAlert(result.msg,'error')
+                }
+            }
+        });
+    }
 
 
 

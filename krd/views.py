@@ -20,6 +20,14 @@ class KonveyerView(LoginRequiredMixin,View):
             loan.save()
         return render(request,'konveyer.html',{"loan":loan,"products":products})
     
+
+class RequestsView(LoginRequiredMixin,View):
+    def get(self,request):
+        loans = Loan.objects.filter(filial=request.user.filial).order_by("-created_at")
+        return render(request,'ariza.html',{"loans":loans})
+
+
+# Shortcuts
 @login_required
 def create_request(request):
     newloan = Loan(
@@ -97,18 +105,6 @@ def add_client(request):
         except Client.DoesNotExist:
             loan.client = None
             return JsonResponse({"status":False, "msg":"Mijoz topilmadi"})
-        
-@login_required
-def reject(request):
-    if request.method == "POST":
-        id = request.POST.get("id")
-        loan = Loan.objects.get(id=id)
-        if loan.status == "rejected":
-            return JsonResponse({"status":False,"msg":"Bu shartnoma rad etilgan"})
-        else:
-            loan.status = "rejected"
-            loan.save()
-            return JsonResponse({"status":True,"msg":"Rad etildi"})
 
 
 @login_required
@@ -132,3 +128,35 @@ def save_number(request):
                 nums[i.name] = i.number
             return JsonResponse({"status":True,"numbers":nums})
         return JsonResponse({"status":False})
+    
+@login_required
+def approve(request):
+    if request.method == 'POST':
+        loan_id = request.POST.get('loan_id')
+
+        if(loan_id):
+            loan = Loan.objects.get(id=loan_id)
+            if (loan.status == "rejected"):
+                return JsonResponse({"status":False,"msg":"Ushbu hujjat rad etilgan!"})
+            elif(loan.status == "done"):
+                return JsonResponse({"status":False,"msg":"Ushbu hujjat avvalroq tasdiqlangan!"})
+            elif(loan.status == "paid"):
+                return JsonResponse({"status":False,"msg":"Ushbu shartnoma yakunlangan!"})
+            else:
+                loan.status = "done"
+                loan.save()
+                return JsonResponse({"status":True,"msg":"Amaliyot bajarildi"})
+            
+@login_required
+def reject(request):
+    if request.method == "POST":
+        id = request.POST.get("id")
+        loan = Loan.objects.get(id=id)
+        if loan.status == "rejected":
+            return JsonResponse({"status":False,"msg":"Bu shartnoma rad etilgan"})
+        elif loan.status == "done":
+            return JsonResponse({"status":False,"msg":"Bu shartnoma bajarilgan"})
+        else:
+            loan.status = "rejected"
+            loan.save()
+            return JsonResponse({"status":True,"msg":"Rad etildi"})

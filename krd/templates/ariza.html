@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,11 +36,12 @@ tr:hover{background:#eef2f3}
 <body>
 
 <nav>
-    <h1><a href="/">AKRD - Auto Kreditor</a></h1>
+    <h1><a href="/">LISA - LOAN CONVEYOR</a></h1>
     <select onchange="navigate(this)">
         <option value="/">-------------------</option>
-        <option value="/new-application">Arizani yuborish</option>
-        <option value="/applications-history">Arizalar tarixi</option>
+        <option value="/">Menyu</option>
+        <option value="/create_loan">Arizani yuborish</option>
+        <option value="/requests">Arizalar tarixi</option>
     </select>
     <a href="#" class="user">{{ user.full_name }}</a>
 </nav>
@@ -66,33 +68,25 @@ tr:hover{background:#eef2f3}
             </thead>
             <tbody>
                 <!-- Example static data -->
+                 {% for i in loans %}
                 <tr>
-                    <td>1</td>
-                    <td>Somov Somjon</td>
-                    <td>12345678901234</td>
-                    <td>Toyota Camry</td>
-                    <td>3,900,000 so‘m</td>
-                    <td>Tasdiqlangan</td>
-                    <td><button class="view-btn" onclick="viewRequest(1)">View</button></td>
+                    <td>{{i.id}}</td>
+                    <td>{{i.client.full_name}}</td>
+                    <td>{{i.client.passport_pinfl}}</td>
+                    <td>{{i.product.name}}</td>
+                    <td>{{i.amount|intcomma}} so‘m</td>
+                    {% if i.status == "pending" %}
+                        <td style="color: rgb(189, 189, 10);">Jarayonda</td>
+                    {% elif i.status == "rejected" %}
+                        <td style="color: rgb(184, 0, 0);">Rad etilgan</td>
+                    {% elif i.status == "paid" %}
+                        <td style="color: rgb(0, 0, 0);">Yopilgan</td>
+                    {% elif i.status == "done" %}
+                        <td style="color: rgb(42, 192, 92);">Berilgan</td>
+                    {% endif %}
+                    <td><a href="{% url 'konveyer' i.id %}" style="text-decoration: none;" class="view-btn" onclick="viewRequest(1)">View</a></td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Aliyev Ali</td>
-                    <td>23456789012345</td>
-                    <td>Lada Granta</td>
-                    <td>2,500,000 so‘m</td>
-                    <td>Jarayonda</td>
-                    <td><button class="view-btn" onclick="viewRequest(2)">View</button></td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Karimov Jamshid</td>
-                    <td>34567890123456</td>
-                    <td>Hyundai Accent</td>
-                    <td>3,200,000 so‘m</td>
-                    <td>Rad etilgan</td>
-                    <td><button class="view-btn" onclick="viewRequest(3)">View</button></td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
         <p id="noData" class="no-data" style="display:none;">Hech qanday ariza topilmadi.</p>

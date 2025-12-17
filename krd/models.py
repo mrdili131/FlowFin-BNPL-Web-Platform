@@ -25,7 +25,7 @@ class Client(models.Model):
 
     # Passport data
     passport_serial = models.CharField(max_length=9,null=True,blank=True)
-    passport_pinfl = models.CharField(max_length=14,validators=[MinValueValidator(14)],unique=True,null=True,blank=True)
+    passport_pinfl = models.CharField(max_length=14,unique=True,null=True,blank=True)
     passport_got_date = models.DateField(null=True,blank=True)
     passport_expiry_date = models.DateField(null=True,blank=True)
     passport_got_region = models.CharField(max_length=100,null=True,blank=True)
@@ -40,6 +40,11 @@ class Client(models.Model):
     filial = models.ForeignKey(Filial,on_delete=models.CASCADE,null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True,blank=True)
 
+    def save(self,*args,**kwargs):
+        parts = filter(None,[self.last_name,self.first_name,self.middle_name])
+        self.full_name = " ".join(parts)
+        super().save(*args,**kwargs)
+
     def __str__(self):
         if self.first_name:
             return self.first_name
@@ -52,6 +57,9 @@ class Product(models.Model):
     filial = models.ForeignKey(Filial,on_delete=models.CASCADE)
     amount = models.IntegerField(default=0)
     is_available = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.name} {self.price}"
     
 class Loan(models.Model):
     # Linkings
@@ -84,6 +92,9 @@ class Loan(models.Model):
     status = models.CharField(choices=status,default="pending",max_length=50)
     filial = models.ForeignKey(Filial,on_delete=models.SET_NULL,null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def _str__(self):
+        return f"{self.id} | {self.amount} | {self.created_at.ctime()}"
 
 
         
