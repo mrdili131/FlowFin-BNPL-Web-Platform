@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ALS – Login</title>
+<title>LISA - Konveyeri</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <style>
@@ -38,16 +38,16 @@ a.forgot:hover{text-decoration:underline}
 <form class="login-container" method="post">
     {% csrf_token %}
     <div id="alerts"></div>
-    <h1>LISA CONVEYOR Login</h1>
+    <h1>LISA - Konveyeriga kirish</h1>
     <div class="field">
-        <label>Username</label>
-        <input type="text" id="username" name="username" placeholder="Enter your username">
+        <label>Login</label>
+        <input type="text" id="username" name="username" placeholder="Loginni kiriting">
     </div>
     <div class="field">
-        <label>Password</label>
-        <input type="password" id="password" name="password" placeholder="Enter your password">
+        <label>Parol</label>
+        <input type="password" id="password" name="password" placeholder="Parolni kiriting">
     </div>
-    <button class="primary" type="submit">Login</button>
+    <button class="primary" type="submit">Kirish</button>
     <!-- <p style="text-align:center;margin-top:12px;"><a href="#" class="forgot">Forgot Password?</a></p> -->
 </form>
 

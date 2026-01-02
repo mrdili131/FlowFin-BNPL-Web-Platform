@@ -1,48 +1,4 @@
-{% load humanize %}
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DIZENDOC</title>
-    
-</head>
-<body>
-    <div class="paper">
-        <div class="board">
-            <h3 class="top-right">Fuqaro {{loan.client.full_name}}<br>JSHSHIR raqami: {{loan.client.passport_pinfl}} dan
-            </h3>
-
-            <br><br>
-            <h1>Rozilik xati</h1>
-                <p>
-                    "DIZENSTUDIOS"ning {{loan.filial.name}} filiali tomonidan menga ajratilgan <strong>№{{loan.contract_id}}</strong>-chi sonli kredit shartnomasining 
-                    to‘lov grafigi bo‘yicha to‘lovlar men tomonimdan o‘z vaqtida amalga oshirilmagan taqdirda, muddati o‘tgan qarizdorlikni 
-                    undirish yuzasidan tashkilot xodimlari tomonidan men bilan o‘zaro munosabatga kirishishining barcha turdagi 
-                    qo‘llangan xolda men bilan o‘zaro munosabatga kirishishlariga , men bilan bog‘lanish imkoni bo‘lmagan hollarda, men 
-                    tomonimdan taqdim etilgan meni tanigan-bilgan uchinchi shaxslarga aloqaga chiqishlariga kredit qarzdorlikni to‘liq 
-                    so‘ndirilgunigacha bo‘lgan davrada ruxsat beraman.
-                </p>
-                <br><br>
-                <div class="left" style="margin-top: 600px;">
-                    <h3>Kredit oluvchi:_____________ {{loan.client.full_name}}</h3>
-                    <h3>Sana: {{loan.start_date|date:"d.m.Y"}}</h3>
-                </div>
-        </div>
-    </div>
-    <div class="info">
-        <h1>F.I.O: {{loan.client.full_name}}</h1>
-        <p>Hujjat nomi: Rozilik xati</p>
-        <p>Hujjat turi: Kreditlash</p>
-        <button onclick="editable()">O'zgartirish</button>
-        <button onclick="window.print()">Chiqarish</button>
-    </div>
-</body>
-</html>
-
-<style>
-    *{
+ *{
         
     }
     body{
@@ -141,10 +97,3 @@
             position: static;
         }
     }
-</style>
-
-<script>
-    function editable(){
-        document.querySelector(".paper").setAttribute("contenteditable","true")
-    }
-</script>

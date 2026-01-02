@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lisa Kredit Konveyeri</title>
+<title>LISA - Konveyeri</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -31,7 +31,7 @@ nav a.user{color:#fff;text-decoration:none;font-weight:500}
 <body>
 
 <nav>
-    <h1><a href="/">LISA - LOAN CONVEYOR</a></h1>
+    <h1><a href="/">LISA - Konveyeri</a></h1>
     <select onchange="navigate(this)">
         <option value="/">-------------------</option>
         <option value="/">Menyu</option>
@@ -44,14 +44,14 @@ nav a.user{color:#fff;text-decoration:none;font-weight:500}
 <main class="main">
     <div class="box-container">
         <!-- Example boxes -->
-        <div class="box">
+        <a style="text-decoration: none;" href="{% url 'create_loan' %}" class="box">
             <h2>Yangi Ariza</h2>
             <p>Yangi kredit arizasi yaratish</p>
-        </div>
-        <div class="box">
+        </a>
+        <a style="text-decoration: none;" href="{% url 'requests' %}" class="box">
             <h2>Arizalar Tarixi</h2>
             <p>Barcha arizalarni ko‘rish</p>
-        </div>
+        </a>
         <div class="box empty">
             <h2>Vazifalar yo‘q</h2>
             <p>Hozircha bajariladigan vazifalar mavjud emas</p>
