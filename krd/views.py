@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from .utils import role_required
 from django.utils.decorators import method_decorator
+from django.db.models import Q
 
 @method_decorator(role_required('creditor'),name="dispatch")
 class IndexView(LoginRequiredMixin,View):
@@ -27,9 +28,19 @@ class KonveyerView(LoginRequiredMixin,View):
 @method_decorator(role_required('creditor'),name="dispatch")
 class RequestsView(LoginRequiredMixin,View):
     def get(self,request):
-        loans = Loan.objects.filter(filial=request.user.filial).order_by("-created_at")
-        return render(request,'creditor/history.html',{"loans":loans})
-    
+        query = request.GET.get("q","").strip()
+        if query:
+            loans = Loan.objects.filter(filial=request.user.filial).filter(
+            Q(client__full_name__icontains=query) |
+            Q(client__passport_pinfl__icontains=query) |
+            Q(contract_id__icontains=query)
+        ).order_by("-created_at")
+            return render(request,'creditor/history.html',{"loans":loans,"q":query})
+        else:
+            loans = Loan.objects.filter(filial=request.user.filial).order_by("-created_at")
+        return render(request,'creditor/history.html',{"loans":loans,"q":query})
+                
+
 @role_required('creditor')
 def document(request,id,doct):
     loan = Loan.objects.get(id=id)

@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LISA - Konveyeri</title>
+<title>FlowFin</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -36,7 +36,7 @@ tr:hover{background:#eef2f3}
 <body>
 
 <nav>
-    <h1><a href="/">LISA - Konveyeri</a></h1>
+    <h1><a href="/">FlowFin</a></h1>
     <select onchange="navigate(this)">
         <option value="/">-------------------</option>
         <option value="/">Menyu</option>
@@ -49,10 +49,10 @@ tr:hover{background:#eef2f3}
 <main class="main">
     <div class="card">
         <h2>Arizalar Tarixi</h2>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="PINFL yoki Ism bo‘yicha izlash">
-            <button onclick="searchTable()">Qidirish</button>
-        </div>
+        <form class="search-bar" method="get">
+            <input type="search" id="searchInput" name="q" value="{{q}}" placeholder="ID, PINFL yoki Ism bo‘yicha izlash">
+            <button type="submit">Qidirish</button>
+        </form>
 
         <table id="historyTable">
             <thead>

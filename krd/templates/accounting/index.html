@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LISA - Konveyeri</title>
+<title>FlowFin</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -130,9 +130,10 @@ textarea{
 
 <!-- ===== NAVBAR ===== -->
 <header class="topbar">
-    <h1>LISA - Konveyeri | Buxgalteriya</h1>
+    <a href="{% url 'accounting:home' %}" style="text-decoration: none;color: white;"><h1>FlowFin | Buxgalteriya</h1></a>
     <div class="nav-actions">
-        <a href="{% url 'accounting:history' %}" style="text-decoration: none; color: black;" class="ghost">📜 History</a>
+        <a href="{% url 'accounting:payment' %}" style="text-decoration: none; color: black;" class="ghost">💳 To‘lov qilish</a>
+        <a href="{% url 'accounting:history' %}" style="text-decoration: none; color: black;" class="ghost">📜 Tarix</a>
     </div>
 </header>
 

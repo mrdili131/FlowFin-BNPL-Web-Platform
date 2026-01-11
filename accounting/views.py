@@ -10,6 +10,9 @@ from krd.utils import role_required
 from datetime import date
 import calendar
 from django.db.models import Sum
+from django.utils import timezone
+from django.db.models import Q
+from datetime import datetime
 
 
 @method_decorator(role_required('accountant'),name="dispatch")
@@ -21,7 +24,7 @@ class IndexView(LoginRequiredMixin,View):
 @method_decorator(role_required('accountant'),name="dispatch")
 class HistoryView(LoginRequiredMixin,View):
     def get(self,request):
-        loans = AccountedLoan.objects.filter(filial=request.user.filial)
+        loans = AccountedLoan.objects.filter(filial=request.user.filial).order_by("-id")
         return render(request,'accounting/history.html',{"loans":loans})
     
 @method_decorator(role_required('accountant'),name="dispatch")
@@ -33,7 +36,31 @@ class PaymentView(LoginRequiredMixin,View):
             loan = Loan.objects.get(id=element.loan.id)
             return render(request,'accounting/payment.html',{"loan":loan,"q":query})
         except AccountedLoan.DoesNotExist:
-            return render(request,'accounting/payment.html',{"q":query})        
+            return render(request,'accounting/payment.html',{"q":query})
+
+@method_decorator(role_required('accountant'),name="dispatch")
+class ReportView(LoginRequiredMixin,View):
+    def get(self,request):
+        start_date = request.GET.get("start_date", str(timezone.now().date()))
+        end_date = request.GET.get("end_date", str(timezone.now().date()))
+        contract_id = request.GET.get("contract_id", "").strip()
+        payments = PaymentMonth.objects.filter(loan__filial = request.user.filial).filter(
+            Q(loan__contract_id=contract_id)
+        )
+        try:
+            start_date_valid = datetime.strptime(start_date, "%Y-%m-%d").date()
+            end_date_valid = datetime.strptime(end_date, "%Y-%m-%d").date()
+        except ValueError:
+            start_date_valid = timezone.now().date()
+            end_date_valid = timezone.now().date()
+
+        if (start_date_valid and end_date_valid):
+            payments = payments.filter(
+                payment_date__gte=start_date_valid,
+                payment_date__lte=end_date_valid
+            )
+        payments = payments.order_by("-id")
+        return render(request,'accounting/report.html',{"payments":payments,"start_date":start_date,"end_date":end_date,"contract_id":contract_id})  
     
 @role_required('accountant')
 def document(request,id,doct):

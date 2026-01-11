@@ -17,7 +17,7 @@
         <div class="section">
             <p>
                 Men, <b>{{user.full_name}}</b>, {{loan.filial.name}} filiali buxgalteri, tasdiqlayman
-                ki, <b>{{loan.client.full_name}}</b> ga <b>{{loan.product.name}}</b> mahsuloti bo‘yicha <b>{{loan.total_amount|intcomma}} so'm</b> miqdorida kredit berilishi mumkin.
+                ki, <b>{{loan.client.full_name}}</b> ga <b>{{loan.product.name}}</b> mahsulotini oyma oy bo‘lib to‘lash uchun berilishini tasdiqlayman.
             </p>
         </div>
 
@@ -36,15 +36,14 @@
         </div>
 
         <div class="section">
-            <h3>Imzo:</h3>
             <div style="display:flex; justify-content:space-between; margin-top:50px;">
                 <div>
                     <p>Buxgalter: ____________________</p>
-                    <p>{{loan.accountant.full_name}}</p>
+                    <p>{{loan.user.full_name}}</p>
                 </div>
                 <div>
                     <p>Boshqaruvchi: ____________________</p>
-                    <p>{{loan.filial.manager_name}}</p>
+                    <p>{{loan.filial.manager}}</p>
                 </div>
             </div>
         </div>
