@@ -11,7 +11,6 @@
 <link rel="icon" href="{% static 'img/icon.ico' %}" type="image/x-icon">
 </head>
 <body>
-
 <header>
   <a href="{% url 'accounting:home' %}" style="text-decoration: none;color: white;"><h2>📊 Kredit To‘lovlari (Ko‘rish)</h2></a>
 </header>
@@ -31,7 +30,7 @@
   <div><b>Kredit №:</b> {{loan.contract_id}}</div>
   <div><b>Oylik to‘lov:</b> {{loan.payment|intcomma}} so‘m</div>
   <div><b>Muddat:</b> {{loan.term}} oy</div>
-  <div><b>Qolgan summa:</b> {{loan.total|intcomma}} so‘m</div>
+  <div><b>Qolgan summa:</b> <code id="left_amount"></code> so‘m</div>
 </div>
 
 <!-- PAYMENT INPUT (READ ONLY) -->
@@ -46,6 +45,7 @@
 {% for i in loan.payment_months.all %}
   <div class="month">
     <div><b>{{i.month}}-oy</b></div>
+    <div><div class="label">Sana</div><div class="value">{{ i.payment_date|intcomma }}</div></div>
     <div><div class="label">To'lash kerak</div><div class="value">{{ i.left_amount|intcomma }} so'm</div></div>
     <div><div class="label">Jarima</div><div class="value">{{i.penalty|intcomma}} so'm</div></div>
     {% if i.is_paid %}
@@ -65,6 +65,14 @@
 </html>
 
 <script>
+  let total_left = 0
+
+  {% for i in loan.payment_months.all %}
+    total_left += Number('{{ i.left_amount }}');
+  {% endfor %}
+
+  document.getElementById("left_amount").innerText = total_left.toLocaleString();
+
     function pay(id){
         let amount = document.getElementById("amount").value
         if (amount > 0){

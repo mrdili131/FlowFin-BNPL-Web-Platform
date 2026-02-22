@@ -205,10 +205,10 @@
     </div>
 
     <!-- LIST OF PHONE NUMBERS -->
-    <div id="number_list" class="number_list" style="margin-top:10px; display:flex;flex-direction:column; gap:10px;">
+    <div id="number_list" class="number_list" style="margin-top:10px; display:flex;flex-direction:column; gap:10px;padding-top: 10px;">
         {% for i in loan.client.numbers.all %}
         <div class="doc number_{{i.id}}">
-            <span>📞 {{i.number}}</span>
+            <span>{{i.number}}</span>
             <span>{{i.name}}</span>
             <button class="danger" id="{{i.id}}" onclick="delete_number(this)">O‘chirish</button>
         </div>
@@ -366,7 +366,7 @@ function save_number(){
                     Object.entries(result.numbers).forEach(([name,number])=>{
                         numbers_list.innerHTML += `
                         <div class="doc">
-                            <span>📞 ${number}</span>
+                            <span>${number}</span>
                             <span>${name}</span>
                             <button class="danger" onclick="deleteItem(this)">O‘chirish</button>
                         </div>
@@ -520,10 +520,10 @@ function calculateMonthlyPayment(){
 
     // ===== UI UPDATE =====
     document.getElementById("monthly_payment").value =
-        Math.round(monthly).toLocaleString("ru-RU") + " so‘m";
+        Math.round(monthly).toLocaleString("ru-RU") + " so'm";
 
     document.getElementById("confirm_monthly").innerText =
-        Math.round(monthly).toLocaleString("ru-RU") + " so‘m";
+        Math.round(monthly).toLocaleString("ru-RU") + " so'm";
 
     // (optional) save hidden values for backend
     window._lkrd_payment_count = count;
