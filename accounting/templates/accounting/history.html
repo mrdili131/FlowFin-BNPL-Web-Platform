@@ -51,7 +51,7 @@
         </div>
         {% if i.loan.status == "done" %}
             <div class="actions">
-                <a class="primary" style="padding:5px;border-radius:13px;text-decoration: none;color: rgb(255, 255, 255);" href="{% url 'accounting:document' i.loan.id 'accounting_cheque' %}">🖨 Chop etish</a>
+                <a class="primary" style="padding:5px;border-radius:13px;text-decoration: none;color: rgb(255, 255, 255);" href="{% url 'accounting:document' i.loan.loan_id 'accounting_cheque' %}">🖨 Chop etish</a>
             </div>
         {% endif %}
     </div>

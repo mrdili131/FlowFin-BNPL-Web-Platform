@@ -17,8 +17,8 @@ class IndexView(LoginRequiredMixin,View):
 
 @method_decorator(role_required('creditor'),name="dispatch")
 class KonveyerView(LoginRequiredMixin,View):
-    def get(self,request,id):
-        loan = Loan.objects.get(id=id)
+    def get(self,request,loan_id):
+        loan = Loan.objects.get(loan_id=loan_id)
         products = Product.objects.filter(filial=request.user.filial,is_available=True)
         if loan.product_price and loan.rate and loan.product.price:
             loan.amount = (loan.product_price/100*loan.rate)+loan.product_price
@@ -42,8 +42,8 @@ class RequestsView(LoginRequiredMixin,View):
                 
 
 @role_required('creditor')
-def document(request,id,doct):
-    loan = Loan.objects.get(id=id)
+def document(request,loan_id,doct):
+    loan = Loan.objects.get(loan_id=loan_id)
     if (doct and doct == "graphic"):
         return render(request,"creditor/graphic.html",{"loan":loan})
     elif (doct and doct == "agreement"):
@@ -74,7 +74,7 @@ def create_request(request):
         filial = request.user.filial
     )
     newloan.save()
-    return redirect('konveyer',id=newloan.id)
+    return redirect('konveyer',loan_id=newloan.loan_id)
 
 def timify(data):
     from datetime import date
@@ -88,9 +88,9 @@ def timify(data):
 def save_data(request):
     if request.method == "POST":
         data = json.loads(request.POST.get("data"))
-        id = request.POST.get("id")
+        id = request.POST.get("loan_id")
         if data and id:
-            loan = Loan.objects.get(id=id)
+            loan = Loan.objects.get(loan_id=id)
             if loan.status not in ["done","rejected","approved","paid"]:
                 product = Product.objects.get(id=int(data["product"]))
                 loan.total_amount = float(data["total_amount"] or 0)
@@ -141,8 +141,8 @@ def save_data(request):
 def add_client(request):
     if request.method == "POST":
         passport_pinfl = request.POST.get("pinfl")
-        id = request.POST.get("id")
-        loan = Loan.objects.get(id=id)
+        loan_id = request.POST.get("loan_id")
+        loan = Loan.objects.get(loan_id=loan_id)
         try:
             client = Client.objects.get(passport_pinfl=passport_pinfl)
             loan.client = client
@@ -157,9 +157,9 @@ def add_client(request):
 def save_number(request):
     if request.method == 'POST':
         number = request.POST.get('number')
-        loan_id = request.POST.get('loan')
+        loan_id = request.POST.get('loan_id')
         name = request.POST.get('desc')
-        loan = Loan.objects.get(id=loan_id)
+        loan = Loan.objects.get(loan_id=loan_id)
         client_obj = Client.objects.get(id=loan.client.id)
         if (number and loan_id):
             num = PhoneNumber(
@@ -186,7 +186,7 @@ def approve(request):
         loan_id = request.POST.get('loan_id')
 
         if(loan_id):
-            loan = Loan.objects.get(id=loan_id)
+            loan = Loan.objects.get(loan_id=loan_id)
             if (loan.status == "rejected"):
                 return JsonResponse({"status":False,"msg":"Ushbu hujjat rad etilgan!"})
             elif(loan.status == "done"):
@@ -204,8 +204,8 @@ def approve(request):
 @login_required
 def reject(request):
     if request.method == "POST":
-        id = request.POST.get("id")
-        loan = Loan.objects.get(id=id)
+        loan_id = request.POST.get("loan_id")
+        loan = Loan.objects.get(loan_id=loan_id)
         if loan.status == "rejected":
             return JsonResponse({"status":False,"msg":"Bu shartnoma rad etilgan"})
         elif loan.status == "done":

@@ -53,9 +53,9 @@
         <!-- <textarea placeholder="Rad etish sababi (majburiy)"></textarea> -->
 
         <div class="actions">
-            <button class="danger" onclick="reject({{i.id}})">Rad etish</button>
-            <button class="primary" onclick="approve({{i.id}})">Tasdiqlash</button>
-            <a class="ghost" style="text-decoration: none;color: black;" href="{% url 'accounting:document' i.id 'accounting_cheque' %}">🖨 Chop etish</a>
+            <button class="danger" onclick="reject('{{i.loan_id}}')">Rad etish</button>
+            <button class="primary" onclick="approve('{{i.loan_id}}')">Tasdiqlash</button>
+            <a class="ghost" style="text-decoration: none;color: black;" href="{% url 'accounting:document' i.loan_id 'accounting_cheque' %}">🖨 Chop etish</a>
         </div>
     </div>
 </div>
@@ -79,7 +79,7 @@ function printLoan(btn){
 
 
 
-function reject(id){
+function reject(loan_id){
     $.ajax({
         url: "{% url 'reject' %}",
         method: "POST",
@@ -87,7 +87,7 @@ function reject(id){
             "X-CSRFToken": document.getElementById("csrf_token").value
         },
         data: {
-            id: id
+            loan_id: loan_id
         },
         success: function( result ) {
             window.location.reload()
@@ -95,7 +95,7 @@ function reject(id){
     });
 }
 
-function approve(id){
+function approve(loan_id){
         $.ajax({
             url: "{% url 'accounting:done' %}",
             method: "POST",
@@ -103,7 +103,7 @@ function approve(id){
                 "X-CSRFToken": document.getElementById("csrf_token").value
             },
             data: {
-                loan_id: id
+                loan_id: loan_id
             },
             success: function( result ) {
                 window.location.reload()

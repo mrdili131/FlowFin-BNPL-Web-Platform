@@ -236,14 +236,14 @@
 <section class="tab">
 <h2>Hujjatlar</h2>
 <div class="card">
-    <div class="doc">Ariza <a href="{% url 'document' loan.id 'request' %}" id="to_pdf" class="primary">CHIQARISH</a></div><hr>
-    <div class="doc">Rozilik xati <a href="{% url 'document' loan.id 'agreement' %}" id="to_pdf" class="primary">CHIQARISH</a></div><hr>
-    <div class="doc">Axborot varaqasi <a href="{% url 'document' loan.id 'information' %}" id="to_pdf" class="primary">CHIQARISH</a></div><hr>
-    <div class="doc">Shartnoma <a href="{% url 'document' loan.id 'contract' %}" id="to_pdf" class="primary">CHIQARISH</a></div><hr>
-    <div class="doc">To'lov grafigi <a href="{% url 'document' loan.id 'graphic' %}" id="to_pdf" class="primary">CHIQARISH</a></div><hr>
-    <div class="doc">Farmoyish <a href="{% url 'document' loan.id 'order' %}" id="to_pdf" class="primary">CHIQARISH</a></div><hr>
-    <div class="doc">Kuzatuv <a href="{% url 'document' loan.id 'kuzatuv' %}" id="to_pdf" class="primary">CHIQARISH</a></div><hr>
-    <div class="doc">Betlik <a href="{% url 'document' loan.id 'betlik' %}" id="to_pdf" class="primary">CHIQARISH</a></div>
+    <div class="doc">Ariza <a href="{% url 'document' loan.loan_id 'request' %}" id="to_pdf" class="primary">CHIQARISH</a></div><hr>
+    <div class="doc">Rozilik xati <a href="{% url 'document' loan.loan_id 'agreement' %}" id="to_pdf" class="primary">CHIQARISH</a></div><hr>
+    <div class="doc">Axborot varaqasi <a href="{% url 'document' loan.loan_id 'information' %}" id="to_pdf" class="primary">CHIQARISH</a></div><hr>
+    <div class="doc">Shartnoma <a href="{% url 'document' loan.loan_id 'contract' %}" id="to_pdf" class="primary">CHIQARISH</a></div><hr>
+    <div class="doc">To'lov grafigi <a href="{% url 'document' loan.loan_id 'graphic' %}" id="to_pdf" class="primary">CHIQARISH</a></div><hr>
+    <div class="doc">Farmoyish <a href="{% url 'document' loan.loan_id 'order' %}" id="to_pdf" class="primary">CHIQARISH</a></div><hr>
+    <div class="doc">Kuzatuv <a href="{% url 'document' loan.loan_id 'kuzatuv' %}" id="to_pdf" class="primary">CHIQARISH</a></div><hr>
+    <div class="doc">Betlik <a href="{% url 'document' loan.loan_id 'betlik' %}" id="to_pdf" class="primary">CHIQARISH</a></div>
 </div>
 </section>
 
@@ -298,7 +298,7 @@ function send_data(){
         },
         data: {
             data: JSON.stringify(data),
-            id: "{{loan.id}}"
+            loan_id: "{{loan.loan_id}}"
         },
         success: function( result ) {
             
@@ -326,7 +326,7 @@ function add_client(){
         },
         data: {
             pinfl: pinfl,
-            id: "{{loan.id}}"
+            loan_id: "{{loan.loan_id}}"
         },
         success: function( result ) {
             if (result.status === true){
@@ -353,7 +353,7 @@ function save_number(){
                 "X-CSRFToken": document.getElementById("csrf_token").value
             },
             data: {
-                loan: "{{loan.id}}",
+                loan_id: "{{loan.loan_id}}",
                 number: number,
                 desc: desc
             },
@@ -400,7 +400,7 @@ function reject(){
             "X-CSRFToken": document.getElementById("csrf_token").value
         },
         data: {
-            id: "{{loan.id}}"
+            loan_id: "{{loan.loan_id}}"
         },
         success: function( result ) {
             if (result.status === true){
@@ -420,7 +420,7 @@ function approve(){
                 "X-CSRFToken": document.getElementById("csrf_token").value
             },
             data: {
-                loan_id: "{{loan.id}}"
+                loan_id: "{{loan.loan_id}}"
             },
             success: function( result ) {
                 if (result.status === true){

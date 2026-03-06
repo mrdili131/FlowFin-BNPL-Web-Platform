@@ -33,7 +33,7 @@ class PaymentView(LoginRequiredMixin,View):
         query = request.GET.get("q")
         try:
             element = AccountedLoan.objects.get(loan__contract_id=query)
-            loan = Loan.objects.get(id=element.loan.id)
+            loan = Loan.objects.get(loan_id=element.loan.loan_id)
             return render(request,'accounting/payment.html',{"loan":loan,"q":query})
         except AccountedLoan.DoesNotExist:
             return render(request,'accounting/payment.html',{"q":query})
@@ -67,8 +67,8 @@ class ReportView(LoginRequiredMixin,View):
         return render(request,'accounting/report.html',{"payments":payments,"start_date":start_date,"end_date":end_date,"contract_id":contract_id})  
     
 @role_required('accountant')
-def document(request,id,doct):
-    loan = Loan.objects.get(id=id)
+def document(request,loan_id,doct):
+    loan = Loan.objects.get(loan_id=loan_id)
     if (doct and doct == "accounting_cheque"):
         return render(request,'accounting/accounting_cheque.html',{"loan":loan})
     
@@ -90,7 +90,7 @@ def done(request):
         loan_id = request.POST.get('loan_id')
 
         if(loan_id):
-            loan = Loan.objects.get(id=loan_id)
+            loan = Loan.objects.get(loan_id=loan_id)
             product = Product.objects.get(id=loan.product.id)
             product.quantity-=1
             product.save()
@@ -119,7 +119,7 @@ def done(request):
             return JsonResponse({"status":True,"msg":"Kredit rasmiylashtirildi!"})
         
 @role_required('accountant')
-def pay(request,id,amount):
-    loan = Loan.objects.get(id=id)
+def pay(request,loan_id,amount):
+    loan = Loan.objects.get(loan_id=loan_id)
     loan.pay(amount)
     return JsonResponse({"status":True})

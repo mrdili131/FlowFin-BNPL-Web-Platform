@@ -36,7 +36,7 @@
 <!-- PAYMENT INPUT (READ ONLY) -->
 <div class="controls">
   <input placeholder="To‘lov summasi" type="number" id="amount">
-  <button class="primary" onclick="pay({{loan.id}})">💳 To‘lash</button>
+  <button class="primary" onclick="pay('{{loan.loan_id}}')">💳 To‘lash</button>
   <a id="cheques-btn" href="{% url 'accounting:payment_history' loan.contract_id %}" class="danger">📅 To‘lov cheklari</a>
 </div>
 
@@ -73,10 +73,10 @@
 
   document.getElementById("left_amount").innerText = total_left.toLocaleString();
 
-    function pay(id){
+    function pay(loan_id){
         let amount = document.getElementById("amount").value
         if (amount > 0){
-            let url = `/accounting/pay/${id}/${amount}`
+            let url = `/accounting/pay/${loan_id}/${amount}`
             fetch (url)
             setTimeout(()=>{
                 window.location.reload()

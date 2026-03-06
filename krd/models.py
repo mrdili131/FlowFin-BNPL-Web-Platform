@@ -2,6 +2,7 @@ from django.db import models
 from users.models import User, Filial
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.timezone import now
+import uuid
 
 gender = [
     ('male','Erkak'),
@@ -72,9 +73,10 @@ class Product(models.Model):
     
 class Loan(models.Model):
     # Linkings
+    loan_id = models.UUIDField(default=uuid.uuid4,primary_key=True,unique=True)
     user = models.ForeignKey(User,on_delete=models.SET_NULL, null=True, blank=True)
     client = models.ForeignKey(Client,on_delete=models.SET_NULL,null=True,blank=True)
-    contract_id = models.CharField(max_length=50,default="")
+    contract_id = models.CharField(max_length=50,default="",unique=True)
 
     # Credit essentials
     payment = models.DecimalField(max_digits=10,decimal_places=0,default=0)
@@ -107,8 +109,8 @@ class Loan(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self,*args,**kwargs):
-        if (self.id):
-            self.contract_id = f"99{self.id:06}"
+        if (self.loan_id):
+            self.contract_id = f"99{str(self.loan_id)[:6]}"
         if (self.product_price == 0 and self.product):
             self.product_price == self.product.price
         if (
@@ -157,7 +159,7 @@ class Loan(models.Model):
         return payment_amount - left
 
     def __str__(self):
-        return f"ID: {self.id} | At: {self.created_at.ctime()}"
+        return f"ID: {self.loan_id} | At: {self.created_at.ctime()}"
         
     
 

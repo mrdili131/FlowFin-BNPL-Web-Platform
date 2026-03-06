@@ -65,7 +65,7 @@
                     {% elif i.status == "approved" %}
                         <td style="color: rgb(27, 95, 6);">Tasdiqlangan</td>
                     {% endif %}
-                    <td><a href="{% url 'konveyer' i.id %}" style="text-decoration: none;" class="view-btn" onclick="viewRequest(1)">View</a></td>
+                    <td><a href="{% url 'konveyer' i.loan_id %}" style="text-decoration: none;" class="view-btn" onclick="viewRequest(1)">View</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

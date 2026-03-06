@@ -10,8 +10,8 @@ urlpatterns = [
     path('report/',views.ReportView.as_view(),name='report'),
     path('payment_history/<str:contract_id>/',views.payment_history,name='payment_history'),
     path('payment_cheque/<int:id>/',views.payment_cheque,name='payment_cheque'),
-    path('pay/<int:id>/<int:amount>/',views.pay,name='pay'),
+    path('pay/<uuid:loan_id>/<int:amount>/',views.pay,name='pay'),
     path('done/',views.done,name='done'),
-    path('document/<int:id>/<str:doct>/',views.document,name='document'),
+    path('document/<uuid:loan_id>/<str:doct>/',views.document,name='document'),
     
 ]
